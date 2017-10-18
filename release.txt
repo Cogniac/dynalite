@@ -1,0 +1,5 @@
+
+
+cd ../ && npm pack dynalite && curl -F package=@dynalite-1.2.3.tgz https://Zew4EeiY1s1M1DiYdi8u@push.fury.io/cogniac/
+
+to install npm install dynalite --registry https://npm-proxy.fury.io/Zew4EeiY1s1M1DiYdi8u/cogniac/
