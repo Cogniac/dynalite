@@ -649,7 +649,15 @@ function compare(comp, val, compVals) {
     case 'CONTAINS':
     case 'contains':
       if (compType == 'S') {
-        if (attrType != 'S' && attrType != 'SS') return false
+        if (attrType == 'L') {
+          var result = attrVal.filter(function(item) {
+            if (compType == Object.keys(item)[0]) {
+              return ~(item[compType].indexOf(compVal));
+            }
+          });
+          return result.length > 0;
+        }
+        if (attrType != 'S' && attrType != 'SS' && attrType != 'L') return false
         if (!~attrVal.indexOf(compVal)) return false
       }
       if (compType == 'N') {
@@ -785,7 +793,7 @@ function queryTable(store, table, data, opts, isLocal, fetchFromItemDb, startKey
 
   var tableCapacity = 0, indexCapacity = 0,
     calculateCapacity = ~['TOTAL', 'INDEXES'].indexOf(data.ReturnConsumedCapacity)
-
+  
   if (fetchFromItemDb) {
     var em = new events.EventEmitter
     var queue = async.queue(function(key, cb) {
@@ -805,13 +813,12 @@ function queryTable(store, table, data, opts, isLocal, fetchFromItemDb, startKey
     })
     var oldVals = vals
     vals = new Lazy(em)
-
+    
     oldVals.map(function(item) {
       if (calculateCapacity) indexCapacity += itemSize(item)
       queue.push(createKey(item, table))
     }).once('pipe', queue.push.bind(queue, ''))
   }
-
   var size = 0, count = 0, rangeKey = table.KeySchema[1] && table.KeySchema[1].AttributeName
 
   vals = vals.takeWhile(function(val) {
@@ -834,7 +841,6 @@ function queryTable(store, table, data, opts, isLocal, fetchFromItemDb, startKey
 
     return true
   })
-
   var queryFilter = data.QueryFilter || data.ScanFilter
 
   if (data._filter) {
