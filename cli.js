@@ -19,6 +19,8 @@ if (argv.help) {
     '--deleteTableMs <ms>  Amount of time tables stay in DELETING state (default: 500)',
     '--updateTableMs <ms>  Amount of time tables stay in UPDATING state (default: 500)',
     '--maxItemSizeKb <kb>  Maximum item size (default: 400)',
+    '--httpTimeout <ms> Inactivity before a socket is presumed to have timed out',
+    '--httpKeepAliveTimeout <ms> inactivity period for additional incoming data before destroying a socket',
     '',
     'Report bugs at github.com/mhart/dynalite/issues',
   ].join('\n'))

@@ -30,6 +30,16 @@ function dynalite(options) {
   } else {
     server = http.createServer(requestHandler)
   }
+ 
+  if (options.httpTimeout != null) {
+    server.timeout = options.httpTimeout
+  }
+
+  if (options.httpKeepAliveTimeout != null) {
+    server.keepAliveTimeout = options.httpKeepAliveTimeout
+  }
+
+  console.log("ServerKeepAliveTimeout:%d ServerTimeout:%d", server.keepAliveTimeout, server.timeout)
 
   // Ensure we close DB when we're closing the server too
   var httpServerClose = server.close, httpServerListen = server.listen
