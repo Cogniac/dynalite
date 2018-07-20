@@ -4,9 +4,10 @@ var crypto = require('crypto'),
     Lazy = require('lazy'),
     levelup = require('levelup'),
     memdown = require('memdown'),
-    sublevel = require('level-sublevel'),
-    Lock = require('lock'),
-    Big = require('big.js')
+    sub = require('subleveldown'),
+    lock = require('lock'),
+    Big = require('big.js'),
+    once = require('once')
 
 exports.MAX_SIZE = 409600 // TODO: get rid of this? or leave for backwards compat?
 exports.create = create
@@ -45,12 +46,11 @@ function create(options) {
   if (options.maxItemSizeKb == null) options.maxItemSizeKb = exports.MAX_SIZE / 1024
   options.maxItemSize = options.maxItemSizeKb * 1024
 
-  var db = levelup(options.path, options.path ? {} : {db: memdown}),
-      sublevelDb = sublevel(db),
-      tableDb = sublevelDb.sublevel('table', {valueEncoding: 'json'}),
+  var db = levelup(options.path ? require('leveldown')(options.path) : memdown()),
+      tableDb = sub(db, 'table', {valueEncoding: 'json'}),
       subDbs = Object.create(null)
 
-  tableDb.lock = new Lock()
+  tableDb.lock = lock.Lock()
 
   // XXX: Is there a better way to get this?
   tableDb.awsAccountId = (process.env.AWS_ACCOUNT_ID || '0000-0000-0000').replace(/[^\d]/g, '')
@@ -74,13 +74,14 @@ function create(options) {
 
   function getSubDb(name) {
     if (!subDbs[name]) {
-      subDbs[name] = sublevelDb.sublevel(name, {valueEncoding: 'json'})
-      subDbs[name].lock = new Lock()
+      subDbs[name] = sub(db, name, {valueEncoding: 'json'})
+      subDbs[name].lock = lock.Lock()
     }
     return subDbs[name]
   }
 
   function deleteSubDb(name, cb) {
+    cb = once(cb)
     var subDb = getSubDb(name)
     delete subDbs[name]
     lazyStream(subDb.createKeyStream(), cb).join(function(keys) {
@@ -135,6 +136,8 @@ function create(options) {
 function lazyStream(stream, errHandler) {
   if (errHandler) stream.on('error', errHandler)
   var streamAsLazy = new Lazy(stream)
+  stream.removeAllListeners('readable')
+  stream.on('data', streamAsLazy.emit.bind(streamAsLazy, 'data'))
   if (stream.destroy) streamAsLazy.on('pipe', stream.destroy.bind(stream))
   return streamAsLazy
 }
@@ -782,6 +785,7 @@ function mapPath(path, item) {
 }
 
 function queryTable(store, table, data, opts, isLocal, fetchFromItemDb, startKeyNames, cb) {
+  cb = once(cb)
   var itemDb = store.getItemDb(data.TableName), vals
 
   if (data.IndexName) {
@@ -841,26 +845,29 @@ function queryTable(store, table, data, opts, isLocal, fetchFromItemDb, startKey
 
     return true
   })
-  var queryFilter = data.QueryFilter || data.ScanFilter
-
-  if (data._filter) {
-    vals = vals.filter(function(val) { return matchesExprFilter(val, data._filter.expression) })
-  } else if (queryFilter) {
-    vals = vals.filter(function(val) { return matchesFilter(val, queryFilter, data.ConditionalOperator) })
-  }
-
-  var paths = data._projection ? data._projection.paths : data.AttributesToGet
-  if (paths) {
-    vals = vals.map(mapPaths.bind(this, paths))
-  }
 
   vals.join(function(items) {
+    var lastItem = items[items.length - 1]
+
+    var queryFilter = data.QueryFilter || data.ScanFilter
+
+    if (data._filter) {
+      items = items.filter(function(val) { return matchesExprFilter(val, data._filter.expression) })
+    } else if (queryFilter) {
+      items = items.filter(function(val) { return matchesFilter(val, queryFilter, data.ConditionalOperator) })
+    }
+
+    var paths = data._projection ? data._projection.paths : data.AttributesToGet
+    if (paths) {
+      items = items.map(mapPaths.bind(this, paths))
+    }
+
     var result = {ScannedCount: count}
     if (count >= data.Limit || size >= 1024 * 1024) {
       if (data.Limit) items.splice(data.Limit)
-      if (items.length) {
+      if (lastItem) {
         result.LastEvaluatedKey = startKeyNames.reduce(function(key, attr) {
-          key[attr] = items[items.length - 1][attr]
+          key[attr] = lastItem[attr]
           return key
         }, {})
       }
