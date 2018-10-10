@@ -857,10 +857,10 @@ function queryTable(store, table, data, opts, isLocal, fetchFromItemDb, startKey
       items = items.filter(function(val) { return matchesFilter(val, queryFilter, data.ConditionalOperator) })
     }
 
-    var paths = data._projection ? data._projection.paths : data.AttributesToGet
-    if (paths) {
-      items = items.map(mapPaths.bind(this, paths))
-    }
+    //var paths = data._projection ? data._projection.paths : data.AttributesToGet
+    //if (paths) {
+    //  items = items.map(mapPaths.bind(this, paths))
+    //}
 
     var result = {ScannedCount: count}
     if (count >= data.Limit || size >= 1024 * 1024) {
@@ -872,6 +872,13 @@ function queryTable(store, table, data, opts, isLocal, fetchFromItemDb, startKey
         }, {})
       }
     }
+
+    // Cogniac
+    var paths = data._projection ? data._projection.paths : data.AttributesToGet
+    if (paths) {
+      items = items.map(mapPaths.bind(this, paths))
+    }
+
     result.Count = items.length
     if (data.Select != 'COUNT') result.Items = items
     if (calculateCapacity) {
