@@ -125,6 +125,12 @@ module.exports = function query(store, data, cb) {
     opts.gte = db.hashPrefix(hashVal, hashType) + '/' + db.toRangeStr(hashVal, hashType) + '/'
     opts.lt = opts.gte + '~'
 
+    // Cogniac - work around using data.limit as this will limit the filter to the first data.Limit 
+    // entries rather than returning the data.Limit entries. 
+    if (data.QueryFilter && data.IndexName) {
+        opts.limit = -1
+    }
+
     if (data.KeyConditions[rangeKey]) {
       var rangeStrPrefix = db.toRangeStr(data.KeyConditions[rangeKey].AttributeValueList[0])
       var rangeStr = rangeStrPrefix + '/'
@@ -164,7 +170,6 @@ module.exports = function query(store, data, cb) {
         delete opts.gte
       }
     }
-
     db.queryTable(store, table, data, opts, isLocal, fetchFromItemDb, startKeyNames, cb)
   })
 }
