@@ -56,5 +56,5 @@ echo $tag
 docker build -t $COGREPO:$tag  .
 
 if [ ${KEEP} -eq 0 ]; then
-    docker push $COGREPO:$tags
+    docker push $COGREPO:$tag
 fi
