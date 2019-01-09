@@ -160,7 +160,8 @@ module.exports = function query(store, data, cb) {
     }
 
     if (data.ExclusiveStartKey) {
-      var startKey = db.createIndexKey(data.ExclusiveStartKey, table, keySchema)
+      var createKey = data.IndexName ? db.createIndexKey : db.createKey
+      var startKey = createKey(data.ExclusiveStartKey, table, keySchema)
 
       if (data.ScanIndexForward === false) {
         opts.lt = startKey
@@ -170,6 +171,7 @@ module.exports = function query(store, data, cb) {
         delete opts.gte
       }
     }
+
     db.queryTable(store, table, data, opts, isLocal, fetchFromItemDb, startKeyNames, cb)
   })
 }
