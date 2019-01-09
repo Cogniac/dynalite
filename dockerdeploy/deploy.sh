@@ -33,6 +33,11 @@ do
         -k | --keep) KEEP=1
                      echo "not pushing to docker repo"
                      ;;
+        -t | --tests) TESTS=1
+                     echo "creating tests docker image and not pushing to docker repo"
+                     PRODUCTION=0
+                     KEEP=1
+                     ;;
         * )          usage
                      exit 1
     esac
@@ -53,7 +58,11 @@ done
 
 echo $tag
 
-docker build -t $COGREPO:$tag  .
+if [ ${TESTS} -eq 0 ]; then
+    docker build -t $COGREPO:$tag  .
+else
+    docker build -f Dockerfile.tests -t $COGREPO:tests  .
+fi
 
 if [ ${KEEP} -eq 0 ]; then
     docker push $COGREPO:$tag
