@@ -17,7 +17,8 @@
     "test",
     "aws",
     "dynamo",
-    "leveldb"
+    "leveldb",
+    "mongodown"
   ],
   "author": "Michael Hart <michael.hart.au@gmail.com>",
   "license": "MIT",
