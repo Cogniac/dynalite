@@ -10,13 +10,14 @@ COPY startdynalite.sh /opt/src/dynalite
 # Install LevelDB and Node.js
 # need to compile leveldb from source using g++
 RUN apk add --no-cache --virtual .build-deps \
+    mongodb \
     python \
     make \
     g++  \
     && cd /opt/src\ 
     && npm install --unsafe-perm --verbose -g dynalite \
     && npm --force cache clear \
-    && apk del .build-deps \
+    #&& apk del .build-deps \
     && rm -rf /tmp/* /var/tmp/* 
 
 # Service user and expose dir if you decided to use --path and leveldb
@@ -31,6 +32,7 @@ VOLUME ["$PERSISTENT_DIR"]
 EXPOSE 14567
 USER $SERVICE_USER
 
-#CMD ["/bin/bash"]
-ENTRYPOINT ["/opt/src/dynalite/startdynalite.sh"]
+CMD ["/bin/bash"]
+#ENTRYPOINT ["/opt/src/dynalite/startdynalite.sh"]
+
 
