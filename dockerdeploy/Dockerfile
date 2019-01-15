@@ -14,6 +14,7 @@ RUN apk add --no-cache --virtual .build-deps \
     python \
     make \
     g++  \
+    bash \
     && cd /opt/src\ 
     && npm install --unsafe-perm --verbose -g dynalite \
     && npm --force cache clear \
