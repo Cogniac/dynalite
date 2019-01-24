@@ -33,7 +33,9 @@
     "once": "^1.4.0",
     "subleveldown": "^3.0.1",
     "sqldown": "^2.1.0",
-    "sqlite3": "^4.0.6"
+    "sqlite3": "^4.0.6",
+    "pg": "^7.8.0",
+    "pg-query-stream": "^2.0.0"
   },
   "optionalDependencies": {
     "leveldown": "^4.0.1"
