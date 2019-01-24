@@ -31,7 +31,9 @@
     "memdown": "^3.0.0",
     "minimist": "^1.2.0",
     "once": "^1.4.0",
-    "subleveldown": "^3.0.1"
+    "subleveldown": "^3.0.1",
+    "sqldown": "^2.1.0",
+    "sqlite3": "^4.0.6"
   },
   "optionalDependencies": {
     "leveldown": "^4.0.1"
