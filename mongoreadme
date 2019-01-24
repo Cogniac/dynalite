@@ -1,7 +1,7 @@
+
 Patch mongodown/index.js
-remove if check for reverse options as the sort takes care of this.
-
-
+This patch allows reverse queries to work from dyanlite. There's no need to flip the options 
+as the sort is in reverse order.
 =========== patch file, cut here==============================
 
 index.js    2019-01-23 16:21:58.000000000 -0800
@@ -37,4 +37,22 @@ index.js    2019-01-23 16:21:58.000000000 -0800
    this._cursor = db._db[db.collection].find(query).sort({ _id: options.reverse ? -1 : 1 });
    if (options.limit && options.limit !== -1) this._cursor = this._cursor.limit(options.limit);
 
+
+Patch mongojs/lib/database.js
+for mongo connection strings of the format:
+mongodb+srv://cogdbuser:<someid>.mongodb.net/cogdbuser?retryWrites=true'
+modify mongojs/lib/database.js
+
+=========== patch file, cut here==============================
+--- database.js	2019-01-23 17:00:47.000000000 -0800
++++ database.js.patch	2019-01-23 17:02:03.000000000 -0800
+@@ -21,7 +21,7 @@
+       connString = 'localhost/' + connString
+     }
+ 
+-    if (connString.indexOf('mongodb://') < 0) {
++    if ((connString.indexOf('mongodb://') < 0) && (connString.indexOf('mongodb+srv://') < 0)) {
+       connString = 'mongodb://' + connString
+     }
+ 
 
