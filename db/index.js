@@ -47,7 +47,9 @@ function create(options) {
   if (options.maxItemSizeKb == null) options.maxItemSizeKb = exports.MAX_SIZE / 1024
   options.maxItemSize = options.maxItemSizeKb * 1024
 
-  var db = levelup(options.path ? require('leveldown')(options.path) : memdown()),
+  //var db = levelup(options.path ? require('leveldown')(options.path) : memdown()),
+  options.path = 'localhost/testdb'
+  var db = levelup(options.path ? require('mongodown')(options.path) : memdown()),
       tableDb = sub(db, 'table', {valueEncoding: 'json'}),
       subDbs = Object.create(null)
 

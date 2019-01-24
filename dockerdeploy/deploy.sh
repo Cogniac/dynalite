@@ -4,7 +4,8 @@ VERSION=`date +"%Y-%m-%d"`
 REPO="dynalite"
 COGREPO="cogniac/${REPO}"
 CODE_DIR=".CODEDIR"
-BRANCH="master"
+#BRANCH="master"
+BRANCH="mongodb"
 PRODUCTION=1  # production version includes git tags
 KEEP=0  # push this container to docker repo? Default to upload
 
