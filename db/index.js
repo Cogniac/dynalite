@@ -52,7 +52,7 @@ function create(options) {
   //options.path = '/tmp/database'
   //var db = levelup(options.path ? require('sqldown')(options.path) : memdown()),
 
-  options.path = 'postgres://localhost:5432/database'
+  options.path = 'postgres://postgres:postgres@localhost:5432/testdb'
   var db = levelup(options.path ? require('sqldown')(options.path) : memdown()),
       tableDb = sub(db, 'table', {valueEncoding: 'json'}),
       subDbs = Object.create(null)

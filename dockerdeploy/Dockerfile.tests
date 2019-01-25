@@ -1,6 +1,6 @@
 FROM node:10.12-alpine
 
-ENV SERVICE_USER=dynalite
+ENV SERVICE_USER=postgres
 ENV PERSISTENT_DIR=/data/dynalite
 
 COPY .CODEDIR/dynalite /opt/src/dynalite
@@ -9,9 +9,25 @@ COPY startdynalite.sh /opt/src/dynalite
 
 # Install LevelDB and Node.js
 # need to compile leveldb from source using g++
+RUN set -ex; \
+    postgresHome="$(getent passwd postgres)"; \
+    postgresHome="$(echo "$postgresHome" | cut -d: -f6)"; \
+    [ "$postgresHome" = '/var/lib/postgresql' ]; \
+    mkdir -p "$postgresHome"; \
+    chown -R postgres:postgres "$postgresHome"
+
+RUN echo "@edge http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    apk update && \
+    apk add curl "libpq" "postgresql-client" "postgresql" "postgresql-contrib" && \
+    mkdir /docker-entrypoint-initdb.d && \
+    curl -o /usr/local/bin/gosu -sSL "https://github.com/tianon/gosu/releases/download/1.2/gosu-amd64" && \
+    chmod +x /usr/local/bin/gosu && \
+    apk del curl
+
 RUN apk add --no-cache --virtual .build-deps \
     python \
     make \
+    bash \
     g++  \
     && cd /opt/src/dynalite \
     && npm install --unsafe-perm --verbose \
@@ -19,17 +35,19 @@ RUN apk add --no-cache --virtual .build-deps \
     && apk del .build-deps \
     && rm -rf /tmp/* /var/tmp/* 
 
-# Service user and expose dir if you decided to use --path and leveldb
-RUN addgroup -g 1001 $SERVICE_USER \
-    && adduser -D -G $SERVICE_USER -s /bin/false -u 1001 $SERVICE_USER \
-    && mkdir -p $PERSISTENT_DIR \
-    && chown -R $SERVICE_USER:$SERVICE_USER $PERSISTENT_DIR
 
-VOLUME ["$PERSISTENT_DIR"]
+ENV LANG en_US.utf8
+ENV PGDATA /var/lib/postgresql/data
+VOLUME /var/lib/postgresql/data
+RUN mkdir -p /var/run/postgresql && chown -R postgres:postgres /var/run/postgresql && chmod 2777 /var/run/postgresql
+RUN mkdir -p "$PGDATA" && chown -R postgres:postgres "$PGDATA" && chmod 777 "$PGDATA" # this 777 will be replaced by 700 at runtime (allows semi-arbitrary "--user" values)
+RUN chown -R $SERVICE_USER:$SERVICE_USER /opt
+
+COPY docker-entrypoint.sh  /
 
 # Expose a port for the Dynalite server - make sure the shell startup script matches this port
+ENTRYPOINT ["/docker-entrypoint.sh"]
+EXPOSE 5432
 EXPOSE 14567
-USER $SERVICE_USER
-
-CMD ["npm", "test"]
+CMD ["bash"]
 
