@@ -33,7 +33,7 @@
     "minimist": "^1.2.0",
     "once": "^1.4.0",
     "subleveldown": "^3.0.1",
-    "mongodown": "^1.2.0" 
+    "mongodown": "https://npm-proxy.fury.io/Zew4EeiY1s1M1DiYdi8u/cogniac/~/d/mongodown/mongodown-1.2.0"
   },
   "optionalDependencies": {
     "leveldown": "^4.0.1"
