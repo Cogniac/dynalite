@@ -5,27 +5,49 @@ ENV PERSISTENT_DIR=/data/dynalite
 
 COPY .CODEDIR/dynalite /opt/src/dynalite
 WORKDIR /opt/src/dynalite
-COPY startdynalite.sh /opt/src/dynalite
+COPY ./startdynalite.sh /opt/src/dynalite
+COPY ./requirements.txt requirements.txt
 
 # Install LevelDB and Node.js
 # need to compile leveldb from source using g++
-RUN apk add --no-cache --virtual .build-deps \
+RUN apk update && apk upgrade && apk add --no-cache --virtual .build-deps \
     mongodb \
     python \
+    python2-dev\
     make \
     g++  \
-    bash \
+    bash \  
+    build-base \
+    linux-headers\
+    && python -m ensurepip \
+    && pip2 install --upgrade pip setuptools \
+    && pip install --upgrade -r requirements.txt \
     && cd /opt/src/dynalite\ 
     && npm install --unsafe-perm --verbose  \
     && npm --force cache clear \
-    #&& apk del .build-deps \
-    && rm -rf /tmp/* /var/tmp/* 
+    && find /usr/local \
+                \( -type d -a -name test -o -name tests \) \
+                -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
+                -exec rm -rf '{}' + \
+    && runDeps="$( \
+                scanelf --needed --nobanner --recursive /usr/local \
+                        | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+                        | sort -u \
+                        | xargs -r apk info --installed \
+                        | sort -u \
+    )"
 
 # Service user and expose dir if you decided to use --path and leveldb
 RUN addgroup -g 1001 $SERVICE_USER \
     && adduser -D -G $SERVICE_USER -s /bin/false -u 1001 $SERVICE_USER \
     && mkdir -p $PERSISTENT_DIR \
-    && chown -R $SERVICE_USER:$SERVICE_USER $PERSISTENT_DIR
+    && chown -R $SERVICE_USER:$SERVICE_USER $PERSISTENT_DIR \
+    && mkdir -p /etc/config
+
+COPY ./boto.cfg /etc/
+COPY ./boto_endpoints.json /etc/config
+COPY ./instance_data.json /etc/config
+
 
 VOLUME ["$PERSISTENT_DIR"]
 

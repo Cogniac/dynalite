@@ -8,4 +8,5 @@ if [ -z ${PORT+x} ]; then
 fi
 echo $PERSISTENT_DIR
 echo $PORT
-/usr/local/bin/dynalite --port ${PORT} --path ${PERSISTENT_DIR} --createTableMs 0 --deleteTableMs 0 --updateTableMs 0 --httpKeepAliveTimeout=50000
+mongod --dbpath ${PERSISTENT_DIR} &
+./cli.js --port ${PORT} --path ${PERSISTENT_DIR} --createTableMs 0 --deleteTableMs 0 --updateTableMs 0 --httpKeepAliveTimeout=50000 &

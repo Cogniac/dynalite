@@ -1,0 +1,5 @@
+{
+    "dynamodb": {
+        "local": "localhost"
+    }
+}
