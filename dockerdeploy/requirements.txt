@@ -1,0 +1,8 @@
+--extra-index-url https://pypi.fury.io/Zew4EeiY1s1M1DiYdi8u/cogniac/
+boto==2.49.0
+boto3==1.9.33
+cogapplication==1.0.9
+coglog==1.9.1
+cogenv==1.2.16
+simplejson==3.16.0
+retrying==1.3.3
