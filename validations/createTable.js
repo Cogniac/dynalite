@@ -308,8 +308,8 @@ exports.custom = function(data) {
       indexNames[indexName] = true
     }
 
-    if (data.GlobalSecondaryIndexes.length > 5)
-      return 'One or more parameter values were invalid: GlobalSecondaryIndex count exceeds the per-table limit of 5'
+    if (data.GlobalSecondaryIndexes.length > 20)
+      return 'One or more parameter values were invalid: GlobalSecondaryIndex count exceeds the per-table limit of 20'
   }
 }
 
