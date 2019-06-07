@@ -1073,13 +1073,88 @@ describe('createTable', function() {
           ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
           Projection: {ProjectionType: 'ALL'},
         }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
+          IndexName: 'abg',
+          KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
+          ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
+          Projection: {ProjectionType: 'ALL'},
+        }, {
           IndexName: 'abh',
           KeySchema: [{AttributeName: 'a', KeyType: 'HASH'}, {AttributeName: 'b', KeyType: 'RANGE'}],
           ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1},
           Projection: {ProjectionType: 'ALL'},
         }],
         ProvisionedThroughput: {ReadCapacityUnits: 1, WriteCapacityUnits: 1}},
-        'One or more parameter values were invalid: GlobalSecondaryIndex count exceeds the per-table limit of 5', done)
+        'One or more parameter values were invalid: GlobalSecondaryIndex count exceeds the per-table limit of 20', done)
     })
 
     it('should return ValidationException for duplicate index names between LocalSecondaryIndexes and GlobalSecondaryIndexes', function(done) {
