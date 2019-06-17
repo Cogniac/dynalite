@@ -8,6 +8,7 @@ CODE_DIR=".CODEDIR"
 BRANCH="mongodb2"
 PRODUCTION=1  # production version includes git tags
 KEEP=0  # push this container to docker repo? Default to upload
+TESTS=0
 
 # Prepare code
 rm -rf ${CODE_DIR}
