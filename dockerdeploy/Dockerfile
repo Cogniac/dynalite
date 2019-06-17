@@ -33,7 +33,7 @@ VOLUME ["$PERSISTENT_DIR"]
 EXPOSE 14567
 USER $SERVICE_USER
 
-CMD ["/bin/bash"]
-#ENTRYPOINT ["/opt/src/dynalite/startdynalite.sh"]
+# CMD ["/bin/bash"]
+ENTRYPOINT ["/opt/src/dynalite/startdynalite.sh"]
 
 
