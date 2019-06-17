@@ -48,7 +48,7 @@ function create(options) {
   options.maxItemSize = options.maxItemSizeKb * 1024
 
   //var db = levelup(options.path ? require('leveldown')(options.path) : memdown()),
-  options.path = 'localhost/testdb'
+  options.path = process.env.MONGO_URL
   var db = levelup(options.path ? require('mongodown')(options.path) : memdown()),
       tableDb = sub(db, 'table', {valueEncoding: 'json'}),
       subDbs = Object.create(null)

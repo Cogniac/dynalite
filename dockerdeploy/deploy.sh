@@ -5,7 +5,7 @@ REPO="dynalite"
 COGREPO="cogniac/${REPO}"
 CODE_DIR=".CODEDIR"
 #BRANCH="master"
-BRANCH="mongodb"
+BRANCH="mongodb2"
 PRODUCTION=1  # production version includes git tags
 KEEP=0  # push this container to docker repo? Default to upload
 
