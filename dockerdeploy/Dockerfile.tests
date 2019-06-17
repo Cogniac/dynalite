@@ -11,6 +11,7 @@ COPY ./requirements.txt requirements.txt
 # Install LevelDB and Node.js
 # need to compile leveldb from source using g++
 RUN apk update && apk upgrade && apk add --no-cache --virtual .build-deps \
+    mongodb \
     python \
     python2-dev\
     make \
